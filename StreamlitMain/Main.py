@@ -4,23 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
+from StreamlitMain.AddPatient import add_new_patient_pop
+from Utilise.Patient import Patient
+from Utilise.Diagnoses import Diagnoses
 
-# Simulated patient database
-patients_db = {
-    "5007299606877391595": {
-        "patient_id": "c3840374-843d-48a7-863e-04bb00995c77",
-        "patient_number": 5007299606877391595,
-        "doctor_id": "05900a4e-f1f5-4f66-816b-5c28d546ee76",
-        "name": "Jane Smith",
-        "date_of_birth": "1990-05-20",
-        "gender": "Female",
-        "country": "USA",
-        "occupation": "Engineer",
-        "ethnicity": "Caucasian",
-        "notes": ["Routine checkup", "No known allergies"],
-        "created_at": "2025-02-08T22:06:56.559+00:00"
-    }
-}
+patient_class = Patient()
+diagnoses_class = Diagnoses()
 
 # Initialize session state
 if "patient_info" not in st.session_state:
@@ -42,13 +31,16 @@ with col2:
 
 # Search for the patient
 if search_button:
-    if patient_id in patients_db:
-        st.session_state.patient_info = patients_db[patient_id]  # Store patient data
+    patient_info = patient_class.get_patient_info(patient_id)
+    print(patient_info)
+
+
+    if patient_info:
+        st.session_state.patient_info = patient_info # Store patient data
         st.success(f"✅ Patient Found: {st.session_state.patient_info['name']}")
     else:
-        st.error("❌ Patient ID not found. Please enter a valid Patient ID.")
+        add_new_patient_pop(patient_id)
 
-# Display patient details if available
 if st.session_state.patient_info:
     patient_info = st.session_state.patient_info
 
@@ -72,13 +64,13 @@ if st.session_state.patient_info:
 
     # Image input selection using st.pills()
     st.write("### 📷 Select Image Input Method")
-    option = st.radio("Choose an option:", ["Upload Image", "Take Picture"], horizontal=True)
+    option = st.pills("Choose an option:", ["Upload Image", "Take Picture"])
 
     # Initialize image input
     uploaded_file, camera_file = None, None
 
     if option == "Upload Image":
-        uploaded_file = st.file_uploader("📤 Upload an image", type=["jpg", "png", "jpeg"])
+        uploaded_file = st.file_uploader("📤 Upload an image", type=["jpg", "png", "jpeg"],accept_multiple_files = False)
         if uploaded_file:
             st.session_state.uploaded_image = uploaded_file
 
@@ -89,8 +81,13 @@ if st.session_state.patient_info:
 
     # Diagnosis button
     if st.button("🔬 Diagnose Skin Condition"):
-        # Simulated AI model result
-        st.session_state.diagnosis_result = {"Benign": 0.2, "Malignant": 0.8}
+        #  AI model result
+        st.session_state.diagnosis_result = diagnoses_class.make_preiction(
+            patient_id,
+            st.session_state.uploaded_image
+
+
+        )
 
     # Display diagnosis results if available
     if st.session_state.diagnosis_result:

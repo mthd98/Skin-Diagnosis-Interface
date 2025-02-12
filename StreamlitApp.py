@@ -5,6 +5,10 @@ from pathlib import Path
 
 
 
+if "JWT" not in st.session_state:
+    st.session_state.jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhZDRmZmU2LTNiZmEtNGU1Yy05NWNkLTM4MzFmYTE2NjVmMCIsImVtYWlsIjoidGVzdDAwMUB0ZXN0LmNvbSIsImV4cCI6MTczOTM4NTE4MX0.ZuxaaYbYu15ycoFa85DI2XaWZDcwVTwOfw3tYmnY1tY"
+
+
 
 base_path = str(Path(__file__).parent)
 
