@@ -32,13 +32,19 @@ with col2:
 # Search for the patient
 if search_button:
     patient_info = patient_class.get_patient_info(patient_id)
-    print(patient_info)
 
 
     if patient_info:
         st.session_state.patient_info = patient_info # Store patient data
+        st.session_state.uploaded_image = None
+        st.session_state.diagnosis_result = None
+        st.rerun()
+
         st.success(f"✅ Patient Found: {st.session_state.patient_info['name']}")
     else:
+        st.session_state.uploaded_image = None
+        st.session_state.diagnosis_result = None
+        st.session_state.patient_info = None
         add_new_patient_pop(patient_id)
 
 if st.session_state.patient_info:
@@ -64,7 +70,7 @@ if st.session_state.patient_info:
 
     # Image input selection using st.pills()
     st.write("### 📷 Select Image Input Method")
-    option = st.pills("Choose an option:", ["Upload Image", "Take Picture"])
+    option = st.pills("Choose an option:", ["Upload Image", "Take Picture"],default = "Upload Image")
 
     # Initialize image input
     uploaded_file, camera_file = None, None
@@ -79,46 +85,63 @@ if st.session_state.patient_info:
         if camera_file:
             st.session_state.uploaded_image = camera_file
 
-    # Diagnosis button
-    if st.button("🔬 Diagnose Skin Condition"):
-        #  AI model result
-        st.session_state.diagnosis_result = diagnoses_class.make_preiction(
-            patient_id,
-            st.session_state.uploaded_image
+    if st.session_state.uploaded_image:
+        # Diagnosis button
+        if st.button("🔬 Diagnose Skin Condition"):
+            #  AI model result
+            st.session_state.diagnosis_result = diagnoses_class.make_preiction(
+                patient_id,
+                st.session_state.uploaded_image
 
 
-        )
+            )
 
-    # Display diagnosis results if available
-    if st.session_state.diagnosis_result:
-        st.write("### 🏥 Diagnosis Result")
+        # Display diagnosis results if available
+        if st.session_state.diagnosis_result:
+            st.write("### 🏥 Diagnosis Result")
 
-        # Convert diagnosis results into a DataFrame for Seaborn
-        df = pd.DataFrame(st.session_state.diagnosis_result.items(), columns=["Condition", "Probability"])
+            # Convert diagnosis results into a DataFrame for Seaborn
+            df = pd.DataFrame(st.session_state.diagnosis_result.items(), columns=["Condition", "Probability"])
 
-        # Define colors for the chart
-        colors = ["#4CAF50", "#FF5733"]  # Green for Benign, Red for Malignant
+            # Define colors for the chart
+            colors = ["#4CAF50", "#FF5733"]  # Green for Benign, Red for Malignant
 
-        # Create a stylish modern Pie Chart using Seaborn & Matplotlib
-        plt.figure(figsize=(5, 5))
-        sns.set_style("whitegrid")
+            # Create a stylish modern Pie Chart using Seaborn & Matplotlib
+            plt.figure(figsize=(5, 5))
+            sns.set_style("whitegrid")
 
-        # Plot Pie Chart
-        wedges, texts, autotexts = plt.pie(
-            df["Probability"],
-            labels=df["Condition"],
-            autopct='%1.1f%%',
-            colors=colors,
-            startangle=140,
-            wedgeprops={"edgecolor": "white", "linewidth": 2, "antialiased": True},
-            textprops={"fontsize": 12, "weight": "bold"}
-        )
+            # Plot Pie Chart
+            wedges, texts, autotexts = plt.pie(
+                df["Probability"],
+                labels=df["Condition"],
+                autopct='%1.1f%%',
+                colors=colors,
+                startangle=140,
+                wedgeprops={"edgecolor": "white", "linewidth": 2, "antialiased": True},
+                textprops={"fontsize": 12, "weight": "bold"}
+            )
 
-        # Set title
-        plt.title("Skin Cancer Diagnosis", fontsize=14, weight="bold")
+            # Set title
+            plt.title("Skin Cancer Diagnosis", fontsize=14, weight="bold")
 
-        # Display the pie chart
-        plt.show()
+            # Display the pie chart
+            plt.show()
 
 
-        st.pyplot(plt)
+            st.pyplot(plt)
+            # Layout for patient ID input and search button
+            col1, col2 ,col3= st.columns([5 ,1, 1])
+            
+            with col2:
+
+                if st.button("Clear"):
+                    st.session_state.uploaded_image = None
+                    st.session_state.patient_info = None
+                    st.session_state.diagnosis_result = None
+                    
+                    st.rerun()
+            with col3:
+                if st.button("Print"):
+                    pass
+
+
