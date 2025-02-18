@@ -65,8 +65,12 @@ if st.session_state.patient_info:
 
     # Display medical notes separately
     st.write("### 📝 Medical Notes")
-    for note in patient_info["notes"]:
-        st.write(f"- {note}")
+    if patient_info["notes"]:
+        for note in patient_info["notes"]:
+            st.write(f"- {note}")
+    else:
+         st.write(f"-")
+
 
     # Image input selection using st.pills()
     st.write("### 📷 Select Image Input Method")

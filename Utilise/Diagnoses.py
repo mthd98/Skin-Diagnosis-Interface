@@ -26,7 +26,7 @@ class Diagnoses():
        
         # Checking response
         if response.status_code == 201:
-           return  response.json()["case"]["diagnosis"]["diagnosis"][-1]  # Assuming the response is JSON
+           return  response.json()["case"]["diagnosis"]  # Assuming the response is JSON
         else:
             return None
 
