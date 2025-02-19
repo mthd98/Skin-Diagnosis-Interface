@@ -1,7 +1,7 @@
 from Utilities.MakeRequests import make_request
 import requests
 import streamlit as st
-
+import pandas as pd 
 class Diagnoses():
     def __init__(self):
         pass
@@ -56,7 +56,10 @@ class Diagnoses():
        
         # Checking response
         if response.status_code == 200:
-           return  response.json()["cases"]  # Assuming the response is JSON
+            print(response.json()["cases"][-1])
+            data =  pd.DataFrame(response.json()["cases"],) # Assuming the response is JSON
+            return data
+
         else:
             return None
 

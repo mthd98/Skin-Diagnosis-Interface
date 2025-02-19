@@ -90,7 +90,9 @@ if st.session_state.patient_info:
             st.session_state.uploaded_image = camera_file
 
     if st.session_state.uploaded_image:
+        st.image(st.session_state.uploaded_image,use_container_width =True)
         # Diagnosis button
+
         if st.button("🔬 Diagnose Skin Condition"):
             #  AI model result
             st.session_state.diagnosis_result = diagnoses_class.make_preiction(
@@ -103,39 +105,25 @@ if st.session_state.patient_info:
         # Display diagnosis results if available
         if st.session_state.diagnosis_result:
             st.write("### 🏥 Diagnosis Result")
-
-            # Convert diagnosis results into a DataFrame for Seaborn
             df = pd.DataFrame(st.session_state.diagnosis_result.items(), columns=["Condition", "Probability"])
-
-            # Define colors for the chart
-            colors = ["#4CAF50", "#FF5733"]  # Green for Benign, Red for Malignant
-
-            # Create a stylish modern Pie Chart using Seaborn & Matplotlib
-            plt.figure(figsize=(5, 5))
+            df["Probability"] *= 100  # Convert to percentage
+            colors = {"Malignant": "#FF5733", "Benign": "#4CAF50"}  # Red for cancer, Green for no cancer
+            
+            plt.figure(figsize=(6, 4))
             sns.set_style("whitegrid")
-
-            # Plot Pie Chart
-            wedges, texts, autotexts = plt.pie(
-                df["Probability"],
-                labels=df["Condition"],
-                autopct='%1.1f%%',
-                colors=colors,
-                startangle=140,
-                wedgeprops={"edgecolor": "white", "linewidth": 2, "antialiased": True},
-                textprops={"fontsize": 12, "weight": "bold"}
-            )
-
-            # Set title
+            
+            sns.barplot(y=df["Condition"], x=df["Probability"], palette=colors, orient='h')
+            plt.xlabel("Probability (%)")
+            plt.ylabel("Condition")
             plt.title("Skin Cancer Diagnosis", fontsize=14, weight="bold")
-
-            # Display the pie chart
-            plt.show()
-
-
+            
+            for index, value in enumerate(df["Probability"]):
+                plt.text(value + 1, index, f"{value:.1f}%", va='center')
+            
             st.pyplot(plt)
             # Layout for patient ID input and search button
             col1, col2 ,col3= st.columns([5 ,1, 1])
-            
+        
             with col2:
 
                 if st.button("Clear"):
