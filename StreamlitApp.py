@@ -1,7 +1,7 @@
 import streamlit as st
 
 from pathlib import Path
-from Utilise.MakeRequests import make_request
+from Utilities.MakeRequests import make_request
 
 
 

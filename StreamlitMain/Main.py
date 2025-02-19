@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from PIL import Image
 from StreamlitMain.AddPatient import add_new_patient_pop
-from Utilise.Patient import Patient
-from Utilise.Diagnoses import Diagnoses
+from Utilities.Patient import Patient
+from Utilities.Diagnoses import Diagnoses
 
 patient_class = Patient()
 diagnoses_class = Diagnoses()
