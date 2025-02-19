@@ -1,5 +1,5 @@
 
-from Utilise.MakeRequests import make_request
+from Utilities.MakeRequests import make_request
 
 
 class Patient():

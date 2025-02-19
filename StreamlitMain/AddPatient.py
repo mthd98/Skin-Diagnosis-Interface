@@ -1,7 +1,7 @@
 import streamlit as st
 import pycountry
 import datetime
-from Utilise.Patient import Patient
+from Utilities.Patient import Patient
 
 patient_class = Patient()
 
