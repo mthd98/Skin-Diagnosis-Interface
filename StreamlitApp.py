@@ -70,17 +70,13 @@ cases = st.Page(
 )
 
 
-settings = st.Page(
-    base_path+"/streamlitMain/Settings.py", title="Settings", icon=":material/settings:"
-)
-
-
 if st.session_state.logged_in:
     pg = st.navigation(
         {
-            "Account": [logout_page],
+
             "Dashboard": [main,cases],
-            "Manage":[settings]
+            "Account": [logout_page],
+           
          
         }
     )

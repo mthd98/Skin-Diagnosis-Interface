@@ -52,7 +52,6 @@ class Diagnoses():
         }
         
         response = requests.get(url, headers=headers, data=None)
-        print(response.json())
        
         # Checking response
         if response.status_code == 200:
@@ -62,4 +61,12 @@ class Diagnoses():
 
         else:
             return None
+        
+
+    def get_case(self,case_id,image_id):
+        url_case = "http://127.0.0.1:8080/cases/cases/{case_id}"
+        url_image = "http://127.0.01:8080/cases/images/{image_id}"
+
+        
+
 
